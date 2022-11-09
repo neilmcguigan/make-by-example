@@ -58,7 +58,7 @@ requirements.txt:
 .PHONY:
 clean:
 	$(foreach f, $(file < .cleanme), 
-		$(shell rm $(f))
+		$(shell rm -f $(f))
 	)
 	rm -f .cleanme
 
