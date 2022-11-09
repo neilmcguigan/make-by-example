@@ -1,0 +1,70 @@
+#!/usr/bin/make -f
+
+# a simple GNU Make file to turn a Flask app (directory)
+# into a docker container, and run it
+# usage: $ dockerize-flask ...
+
+MAKEFLAGS += --warn-undefined-variables
+SHELL := bash
+.ONESHELL:
+.SILENT:
+
+# user-configurable variables:
+local-port := 5000
+remote-port := 5000
+name := $(notdir $(PWD))
+flask-debug := 1
+base-image := python:3.11.0-alpine
+
+override filename := $(lastword $(MAKEFILE_LIST))
+
+.PHONY:
+run: Dockerfile
+	docker build --tag $(name) .
+	docker run \
+		--env FLASK_DEBUG=$(flask-debug) \
+		--publish $(local-port):$(remote-port) \
+		--rm \
+		--name $(name) \
+		--volume `pwd`:/app \
+		$(name)
+
+
+Dockerfile: requirements.txt
+	echo $@ >> .cleanme
+	cat <<EOF >> Dockerfile
+	FROM $(base-image)
+	WORKDIR /app
+	COPY requirements.txt .
+	RUN pip install -r requirements.txt
+	COPY . .
+	EXPOSE $(remote-port)
+	CMD ["flask", "run", "--host=0.0.0.0"]
+	EOF
+
+
+# create a basic requirements.txt if not exist
+# add to .cleanme if we created it
+requirements.txt:
+	echo $@ >> .cleanme
+	echo flask > requirements.txt
+
+
+# remove all the files in the .cleanme file
+.PHONY:
+clean:
+	$(foreach f, $(file < .cleanme), 
+		$(shell rm $(f))
+	)
+	rm -f .cleanme
+
+
+# install this file in $PATH and make it executable
+.PHONY:
+install:
+	chmod +x $(filename)
+	cp $(filename) ~/.local/bin/
+
+
+version:
+	echo 0.1

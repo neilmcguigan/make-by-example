@@ -1,7 +1,0 @@
-Run same thing in different places:
-- docker
-- locally
-- in a venv
-- on the cloud
-
-and in dev/prod modes...

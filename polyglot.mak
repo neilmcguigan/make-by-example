@@ -3,6 +3,7 @@
 
 all: python sqlite bash
 
+# this is a target-specific variable:
 python: SHELL := python3
 python:
 	from datetime import datetime
@@ -17,6 +18,8 @@ sqlite:
 	union all
 	select current_time;
 
+
+bash: SHELL := bash
 bash:
 	echo --- bash ---
 	echo `date`

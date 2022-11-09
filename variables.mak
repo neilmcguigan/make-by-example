@@ -9,7 +9,7 @@ from_shell_function := $(shell date)
 appended = foo
 appended += bar
 
-undefined := undefined
+undefined := whatever
 undefine undefined
 
 # cannot be set from cli:
@@ -37,6 +37,6 @@ all:
 	$(info undefined=$(undefined), origin=$(origin undefined), flavor=$(flavor undefined))
 
 	$(eval at_rule_exec_time != date +%s%N)
-	$(info $(at_rule_exec_time))
+	$(info at_rule_exec_time=$(at_rule_exec_time), origin=$(origin at_rule_exec_time), flavor=$(flavor at_rule_exec_time))
 
 	$(info target_specific_variable=$(target_specific_variable), origin=$(origin target_specific_variable), flavor=$(flavor target_specific_variable))

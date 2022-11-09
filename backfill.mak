@@ -1,7 +1,7 @@
-# imagine you have a database or file of successful executions of a program
+# imagine you have a "state" database or file of executions of a program
 # but need to "backfill" "missed" runs
 # calculate the missed dates from state
-# then run the program with those dates
+# then run your program with those dates
 # this can run in parallel with make -j
 
 .ONESHELL:
