@@ -77,6 +77,15 @@ install:
 version: ## show my version number
 	echo $(version)
 
+
+help: ## show this message
+	@sed -ne '/@sed/!s/## //p' $(filename)
+
+
+ifeq (,$(shell which docker))
+	$(warning Warning: docker not installed)
+endif
+
 ## 
 ## Options:
 ## local-port=5000
@@ -84,11 +93,3 @@ version: ## show my version number
 ## name=`pwd`
 ## flask-debug=1
 ## base-image=python:alpine
-
-help: ## show this message
-	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
-
-
-ifeq (,$(shell which docker))
-	$(warning Warning: docker not installed)
-endif
