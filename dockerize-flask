@@ -17,6 +17,7 @@ flask-debug := 1
 base-image := python:3.11.0-alpine
 
 override filename := $(lastword $(MAKEFILE_LIST))
+override version := 0.1
 
 
 # build docker image and run it
@@ -71,4 +72,4 @@ install:
 
 
 version:
-	echo 0.1
+	echo $(version)
