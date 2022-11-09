@@ -20,6 +20,7 @@ i am
 multi-line
 endef
 
+all: target_specific_variable != date +%s%N
 all:
 	$(info simple=$(simple), origin=$(origin simple), flavor=$(flavor simple))
 
@@ -37,3 +38,5 @@ all:
 
 	$(eval at_rule_exec_time != date +%s%N)
 	$(info $(at_rule_exec_time))
+
+	$(info target_specific_variable=$(target_specific_variable), origin=$(origin target_specific_variable), flavor=$(flavor target_specific_variable))
