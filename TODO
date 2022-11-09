@@ -4,3 +4,4 @@ Run same thing in different places:
 - in a venv
 - on the cloud
 
+and in dev/prod modes...
