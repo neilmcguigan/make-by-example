@@ -1,28 +1,32 @@
 #!/usr/bin/make -f
 
-# a simple GNU Make file to turn a Flask app (directory)
-# into a docker container, and run it
-# usage: $ dockerize-flask ...
+## ----------------------------------------------------------------------
+## A program to turn a Flask app directory into a docker image, and run it
+## 
+## Usage: dockerize-flask [COMMAND] [OPTIONS]
+## ----------------------------------------------------------------------
+
 
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .ONESHELL:
 .SILENT:
 
-# user-configurable variables:
 local-port := 5000
 remote-port := 5000
 name := $(notdir $(PWD))
 flask-debug := 1
 base-image := python:3.11.0-alpine
 
+
 override filename := $(lastword $(MAKEFILE_LIST))
 override version := 0.1
 
-
-# build docker image and run it
+## 
+## Commands: 
+## run (default): build & run a Docker container
 .PHONY:
-run: Dockerfile
+run: Dockerfile 
 	docker build --tag $(name) .
 	docker run \
 		--env FLASK_DEBUG=$(flask-debug) \
@@ -33,8 +37,7 @@ run: Dockerfile
 		$(name)
 
 
-# create basic Dockerfile if not exist
-# add to .cleanme if we created it
+## Dockerfile: create a basic Dockerfile if not exist
 Dockerfile: requirements.txt
 	echo $@ >> .cleanme
 	cat <<EOF >> Dockerfile
@@ -48,14 +51,13 @@ Dockerfile: requirements.txt
 	EOF
 
 
-# create a basic requirements.txt if not exist
-# add to .cleanme if we created it
+## requirements.txt: create a basic requirements.txt if not exist
 requirements.txt:
 	echo $@ >> .cleanme
-	echo flask > requirements.txt
+	echo flask > $@
 
 
-# remove all the files in the .cleanme file
+## clean: remove all created files
 .PHONY:
 clean:
 	$(foreach f, $(file < .cleanme), 
@@ -64,12 +66,29 @@ clean:
 	rm -f .cleanme
 
 
-# install this file in $PATH and make it executable
+## install: install this in $PATH and make it executable
 .PHONY:
 install:
 	chmod +x $(filename)
 	cp $(filename) ~/.local/bin/
+	$(info installed to ~/.local/bin/$(filename))
 
 
-version:
+version: ## show my version number
 	echo $(version)
+
+## 
+## Options:
+## local-port=5000
+## remote-port=5000
+## name=`pwd`
+## flask-debug=1
+## base-image=python:alpine
+
+help: ## show this message
+	@sed -ne '/@sed/!s/## //p' $(MAKEFILE_LIST)
+
+
+ifeq (,$(shell which docker))
+	$(warning Warning: docker not installed)
+endif
