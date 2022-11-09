@@ -18,6 +18,8 @@ base-image := python:3.11.0-alpine
 
 override filename := $(lastword $(MAKEFILE_LIST))
 
+
+# build docker image and run it
 .PHONY:
 run: Dockerfile
 	docker build --tag $(name) .
@@ -30,6 +32,8 @@ run: Dockerfile
 		$(name)
 
 
+# create basic Dockerfile if not exist
+# add to .cleanme if we created it
 Dockerfile: requirements.txt
 	echo $@ >> .cleanme
 	cat <<EOF >> Dockerfile
