@@ -1,0 +1,4 @@
+#!/usr/bin/make -f
+
+all:
+  echo run chmod +x executable then run me
